@@ -129,7 +129,7 @@ impl RawProgram {
   }
 
   #[inline]
-  pub(crate) fn handle(&self) -> GLuint {
+  pub fn handle(&self) -> GLuint {
     self.handle
   }
 }
