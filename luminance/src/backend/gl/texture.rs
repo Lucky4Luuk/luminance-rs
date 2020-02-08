@@ -20,8 +20,8 @@ pub struct GLTexture<D>
 where
   D: Dimensionable,
 {
-  handle: GLuint, // handle to the GPU texture object
-  target: GLenum, // “type” of the texture; used for bindings
+  pub(crate) handle: GLuint, // handle to the GPU texture object
+  target: GLenum,            // “type” of the texture; used for bindings
   size: D::Size,
   mipmaps: usize,
   state: Rc<RefCell<GLState>>,

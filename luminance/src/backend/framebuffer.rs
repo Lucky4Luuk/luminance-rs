@@ -2,6 +2,8 @@
 
 use std::fmt;
 
+use crate::backend::color_slot::ColorSlot;
+use crate::backend::depth_slot::DepthSlot;
 use crate::backend::texture::{Dimensionable, Layerable, Sampler, TextureBase, TextureError};
 
 /// Framebuffer error.
@@ -82,12 +84,15 @@ where
 {
   type FramebufferRepr;
 
-  unsafe fn new_framebuffer(
+  unsafe fn new_framebuffer<CS, DS>(
     &mut self,
     size: D::Size,
     mipmaps: usize,
     sampler: &Sampler,
-  ) -> Result<Self::FramebufferRepr, FramebufferError>;
+  ) -> Result<Self::FramebufferRepr, FramebufferError>
+  where
+    CS: ColorSlot<Self, L, D>,
+    DS: DepthSlot<Self, L, D>;
 
   unsafe fn destroy_framebuffer(framebuffer: &mut Self::FramebufferRepr);
 
@@ -101,6 +106,10 @@ where
     framebuffer: &mut Self::FramebufferRepr,
     texture: &Self::TextureRepr,
   ) -> Result<(), FramebufferError>;
+
+  unsafe fn validate_framebuffer(
+    framebuffer: Self::FramebufferRepr,
+  ) -> Result<Self::FramebufferRepr, FramebufferError>;
 
   unsafe fn framebuffer_size(framebuffer: &Self::FramebufferRepr) -> D::Size;
 }

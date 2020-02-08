@@ -48,9 +48,13 @@ where
     C: GraphicsContext<Backend = B>,
   {
     unsafe {
-      let mut repr = ctx.backend().new_framebuffer(size, mipmaps, &sampler)?;
+      let mut repr = ctx
+        .backend()
+        .new_framebuffer::<CS, DS>(size, mipmaps, &sampler)?;
       let color_slot = CS::reify_color_textures(ctx, size, mipmaps, &sampler, &mut repr, 0)?;
       let depth_slot = DS::reify_depth_texture(ctx, size, mipmaps, &sampler, &mut repr)?;
+
+      let repr = B::validate_framebuffer(repr)?;
 
       Ok(Framebuffer {
         repr,
